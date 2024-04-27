@@ -23,8 +23,11 @@ def delete_message(handle):
 #need to do x10 times, without running separatly 10 times
 def get_message():
 
-    #fancy method of initalizing arrays, learnt it when I was grinding Leetcode for job interviews
+    #fancy method of initalizing arrays, learnt it while I was grinding LeetCode
     myWords = [""] * 10
+
+    #order doesn't matter, just append handles to this array
+    delete_arr = []
 
 
     count = 0
@@ -51,18 +54,17 @@ def get_message():
                 handle = response['Messages'][0]['ReceiptHandle']
 
                 # Print the message attributes - this is what you want to work with to reassemble the message
-                print(f"Order: {order}")
-                print(f"Word: {word}")
+                # print(f"Order: {order}")
+                # print(f"Word: {word}")
 
                 #assign words in order, use int() to index array
                 myWords[int(order)] = word
-
+                delete_arr.append(handle)
                 count += 1
 
             # If there is no message in the queue, print a message and exit    
             #else:
                 #print("No message in the queue")
-
                 #exit(1)
                 
         # Handle any errors that may occur connecting to SQS
@@ -80,10 +82,15 @@ def get_message():
 
         #if not last word, add space after
         if n != len(myWords) - 1:
-            myWords += " "
+            ret += " "
     
     #display string
     print(ret)
+
+    #Loop through delete_arr
+    for h in delete_arr:
+        #call delete_message on handle
+        delete_message(h)
 
 # Trigger the function
 if __name__ == "__main__":
